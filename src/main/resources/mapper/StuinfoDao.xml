@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lvjin.util.dao.StuinfoDao">
+
+    <resultMap type="com.lvjin.util.entity.Stuinfo" id="StuinfoMap">
+        <result property="stuid" column="stuId" jdbcType="INTEGER"/>
+        <result property="stuname" column="stuName" jdbcType="VARCHAR"/>
+        <result property="stusex" column="stuSex" jdbcType="INTEGER"/>
+        <result property="stuage" column="stuAge" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="StuinfoMap">
+        select
+          stuId, stuName, stuSex, stuAge
+        from stuinfo
+        where stuId = #{stuid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="StuinfoMap">
+        select
+          stuId, stuName, stuSex, stuAge
+        from stuinfo
+        <where>
+            <if test="stuid != null">
+                and stuId = #{stuid}
+            </if>
+            <if test="stuname != null and stuname != ''">
+                and stuName = #{stuname}
+            </if>
+            <if test="stusex != null">
+                and stuSex = #{stusex}
+            </if>
+            <if test="stuage != null">
+                and stuAge = #{stuage}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from stuinfo
+        <where>
+            <if test="stuid != null">
+                and stuId = #{stuid}
+            </if>
+            <if test="stuname != null and stuname != ''">
+                and stuName = #{stuname}
+            </if>
+            <if test="stusex != null">
+                and stuSex = #{stusex}
+            </if>
+            <if test="stuage != null">
+                and stuAge = #{stuage}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="stuid" useGeneratedKeys="true">
+        insert into stuinfo(stuName, stuSex, stuAge)
+        values (#{stuname}, #{stusex}, #{stuage})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="stuid" useGeneratedKeys="true">
+        insert into stuinfo(stuName, stuSex, stuAge)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.stuname}, #{entity.stusex}, #{entity.stuage})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="stuid" useGeneratedKeys="true">
+        insert into stuinfo(stuName, stuSex, stuAge)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.stuname}, #{entity.stusex}, #{entity.stuage})
+        </foreach>
+        on duplicate key update
+        stuName = values(stuName),
+        stuSex = values(stuSex),
+        stuAge = values(stuAge)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update stuinfo
+        <set>
+            <if test="stuname != null and stuname != ''">
+                stuName = #{stuname},
+            </if>
+            <if test="stusex != null">
+                stuSex = #{stusex},
+            </if>
+            <if test="stuage != null">
+                stuAge = #{stuage},
+            </if>
+        </set>
+        where stuId = #{stuid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from stuinfo where stuId = #{stuid}
+    </delete>
+
+</mapper>
+
