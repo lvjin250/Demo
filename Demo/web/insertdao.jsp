@@ -1,6 +1,6 @@
-<%@ page import="com.lvjin.entity.StuInfoEntity"%>
+<%@ page import="com.jin.entity.StuInfoEntity"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ page import="com.lvjin.dao.StuInfoDAO" %>
+<%@ page import="com.jin.dao.StuInfoDAO" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
